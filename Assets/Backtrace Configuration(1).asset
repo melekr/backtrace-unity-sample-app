@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90e908b13f7467f4185f3f45d43568c4, type: 3}
-  m_Name: Backtrace Configuration
+  m_Name: Backtrace Configuration(1)
   m_EditorClassIdentifier: 
   ServerUrl: https://submit.backtrace.io/spmtests/6e15d495fad7d09e13fb327616add4971347a512aabd1fea3f1f6213809c5d04/json
   Token: 
@@ -28,8 +28,8 @@ MonoBehaviour:
   CaptureNativeCrashes: 1
   HandleANR: 1
   AnrWatchdogTimeout: 5000
-  OomReports: 0
-  ClientSideUnwinding: 0
+  OomReports: 1
+  ClientSideUnwinding: 1
   SymbolsUploadToken: 
   DeduplicationStrategy: 0
   EnableBreadcrumbsSupport: 0
@@ -39,11 +39,11 @@ MonoBehaviour:
   MinidumpType: 524286
   GenerateScreenshotOnException: 0
   AttachmentPaths: []
-  DatabasePath: ${Application.persistentDataPath}/backtrace
+  DatabasePath: ${Application.persistentDataPath}/backtrace/database
   EnableMetricsSupport: 1
   TimeIntervalInMin: 30
   Enabled: 1
-  AddUnityLogToReport: 0
+  AddUnityLogToReport: 1
   AutoSendMode: 1
   CreateDatabase: 1
   MaxRecordCount: 8

@@ -29,22 +29,24 @@ public class BacktraceManager : MonoBehaviour
             configuration.Enabled = true;
             configuration.PerformanceStatistics = true;
             configuration.EnableMetricsSupport = true;
-            var databasePath = "${Application.persistentDataPath}/backtrace";
+            var databasePath = "${Application.persistentDataPath}/backtrace/database";
             configuration.DatabasePath = databasePath;
             configuration.CreateDatabase = true;
             configuration.EnableBreadcrumbsSupport = true;
             configuration.BacktraceBreadcrumbsLevel = BacktraceBreadcrumbType.Configuration | BacktraceBreadcrumbType.Http | BacktraceBreadcrumbType.Log | BacktraceBreadcrumbType.Manual | BacktraceBreadcrumbType.System | BacktraceBreadcrumbType.Navigation;
             configuration.LogLevel = UnityEngineLogLevel.Debug | UnityEngineLogLevel.Error | UnityEngineLogLevel.Fatal | UnityEngineLogLevel.Info | UnityEngineLogLevel.Warning;
-#if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
             configuration.OomReports = true;
             configuration.HandleANR = false;
             configuration.CaptureNativeCrashes = true;
-            //   configuration.SymbolsUploadToken = "f3228a2c0ec3167f9235a0bd039d4ff4ccf9a21b227a5f1156808305f3e7b3b6";
-            //configuration.ClientSideUnwinding = true;
+            //configuration.SymbolsUploadToken = "a4184e3f4a0f7d55ee99787a56defe9becbb6e14f63e97aa5bbd33b0eca8ca36";
+            configuration.ClientSideUnwinding = true;
 #endif
             _client = BacktraceClient.Initialize(configuration, _attributes, BacktraceGameObjectName);
             _client.EnableMetrics();
             Debug.Log("Successfully started Backtrace client integration");
+            // Log db path
+            Debug.Log(Application.persistentDataPath);
         }
         else
         {
