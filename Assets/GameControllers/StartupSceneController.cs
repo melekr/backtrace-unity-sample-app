@@ -44,7 +44,9 @@ public class StartupSceneController : MonoBehaviour
         _client.Breadcrumbs.Exception("exception", attributes);
         try
         {
+            #if !UNITY_WEBGL
             _client.Metrics.AddSummedEvent("handle-execption", null);
+            #endif
             Debug.LogError("Throwing a handled exception object");
             InternalFileReader();
         }
@@ -53,7 +55,9 @@ public class StartupSceneController : MonoBehaviour
             _client.Send(e, attributes: attributes);
         }
         _client.Send("foo-bar");
+        #if !UNITY_WEBGL
         _client.Metrics.Send();
+        #endif
     }
 
     public void UnhandledException()

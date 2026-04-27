@@ -10,7 +10,7 @@ public class BacktraceManager : MonoBehaviour
     private const string BacktraceGameObjectName = "Backtrace";
     private readonly Dictionary<string, string> _attributes = new Dictionary<string, string>()
         {
-            {"author", "Konrad" },
+            {"author", "Melek" },
             { "project-name", "backtrace-unity validation" },
             { "pid", System.Diagnostics.Process.GetCurrentProcess().Id.ToString() },
             { "test-nullable-variable", null },
@@ -43,7 +43,9 @@ public class BacktraceManager : MonoBehaviour
             configuration.ClientSideUnwinding = true;
 #endif
             _client = BacktraceClient.Initialize(configuration, _attributes, BacktraceGameObjectName);
+#if !UNITY_WEBGL
             _client.EnableMetrics();
+#endif
             Debug.Log("Successfully started Backtrace client integration");
             // Log db path
             Debug.Log(Application.persistentDataPath);
