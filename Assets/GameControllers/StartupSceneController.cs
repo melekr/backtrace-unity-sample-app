@@ -25,39 +25,79 @@ public class StartupSceneController : MonoBehaviour
     }
     public void HandledException()
     {
-        _client[LastAction] = "HandleException";
-        var attributes = new Dictionary<string, string>()
-                {
-                    { "Controller" , "StartupScene"},
-                    { "Time", Time.time.ToString() },
-                };
+        var attributes = new Dictionary<string, string>
+        {
+            { "Controller", "StartupScene" },
+            { "Time", Time.time.ToString() },
+            { "action.last", "HandleException" }
+        };
+
+        try
+        {
+            if (_client == null)
+            {
+                _client = BacktraceClient.Instance;
+            }
+
+            if (_client == null)
+            {
+                Debug.LogWarning("Backtrace client is not initialized.");
+                return;
+            }
+
+            _client[LastAction] = "HandleException";
+
+            AddBreadcrumbsSafely(attributes);
+
+#if !UNITY_WEBGL
+            if (_client.Metrics != null)
+            {
+                _client.Metrics.AddSummedEvent("handled-exception", null);
+            }
+#endif
+
+            Debug.LogError("Throwing a handled exception object");
+
+            // This is the exception being validated as handled.
+            InternalFileReader();
+        }
+        catch (Exception exception)
+        {
+            if (_client == null)
+            {
+                Debug.LogException(exception);
+                return;
+            }
+
+            _client.Send(exception, attributes: attributes);
+        }
+
+       // _client.Send("foo-bar");
+
+#if !UNITY_WEBGL
+        if (_client.Metrics != null)
+        {
+            _client.Metrics.Send();
+        }
+#endif
+    }
+
+    private void AddBreadcrumbsSafely(Dictionary<string, string> attributes)
+    {
+        if (_client == null || _client.Breadcrumbs == null)
+        {
+            return;
+        }
 
         _client.Breadcrumbs.Info("info");
         _client.Breadcrumbs.Warning("warning");
         _client.Breadcrumbs.Debug("debug");
         _client.Breadcrumbs.Exception("exception");
 
-
         _client.Breadcrumbs.Info("info", attributes);
         _client.Breadcrumbs.Warning("warning", attributes);
         _client.Breadcrumbs.Debug("debug", attributes);
         _client.Breadcrumbs.Exception("exception", attributes);
-        try
-        {
-            #if !UNITY_WEBGL
-            _client.Metrics.AddSummedEvent("handle-execption", null);
-            #endif
-            Debug.LogError("Throwing a handled exception object");
-            InternalFileReader();
-        }
-        catch (Exception e)
-        {
-            _client.Send(e, attributes: attributes);
-        }
-        _client.Send("foo-bar");
-        #if !UNITY_WEBGL
-        _client.Metrics.Send();
-        #endif
     }
 
     public void UnhandledException()
